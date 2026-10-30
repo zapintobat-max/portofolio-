@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="id" class="dark scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Futuristic Interactive Portfolio</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts: Orbitron & Plus Jakarta Sans -->
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;800;900&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        cyber: {
+                            blue: '#00f0ff',
+                            purple: '#7000ff',
+                            pink: '#ff007f',
+                            dark: '#0a0a12',
+                            card: 'rgba(18, 18, 32, 0.7)',
+                            border: 'rgba(0, 240, 255, 0.2)'
+                        }
+                    },
+                    fontFamily: {
+                        orbitron: ['Orbitron', 'sans-serif'],
+                        sans: ['Plus Jakarta Sans', 'sans-serif'],
+                        mono: ['Fira Code', 'monospace']
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* Kustom Font & Glow Effects */
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: #06060c;
+            color: #e2e8f0;
+            overflow-x: hidden;
+        }
+
+        .glow-text-cyan {
+            text-shadow: 0 0 10px rgba(0, 240, 255, 0.6), 0 0 20px rgba(0, 240, 255, 0.3);
+        }
+
+        .glow-text-purple {
+            text-shadow: 0 0 10px rgba(112, 0, 255, 0.6), 0 0 20px rgba(112, 0, 255, 0.3);
+        }
+
+        .glass-panel {
+            background: rgba(15, 15, 28, 0.65);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .glass-panel-hover:hover {
+            border-color: rgba(0, 240, 255, 0.4);
+            box-shadow: 0 0 25px rgba(0, 240, 255, 0.15);
+            transform: translateY(-4px);
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #06060c;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #1e1e38;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #00f0ff;
+        }
+
+        /* Gradient Animation */
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .animated-gradient-text {
+            background: linear-gradient(90deg, #00f0ff, #7000ff, #ff007f, #00f0ff);
+            background-size: 300% 300%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: gradientBG 6s ease infinite;
+        }
+
+        /* Custom Cursor Follower */
+        #cursor-glow {
+            pointer-events: none;
+            position: fixed;
+            width: 400px;
+            height: 400px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(0, 240, 255, 0.08) 0%, rgba(112, 0, 255, 0.03) 40%, rgba(0,0,0,0) 70%);
+            transform: translate(-50%, -50%);
+            z-index: 1;
+            transition: width 0.3s, height 0.3s;
+        }
+    </style>
+</head>
+<body class="relative min-h-screen selection:bg-cyber-blue selection:text-black">
+
+    <!-- Cursor Follower Light -->
+    <div id="cursor-glow"></div>
+
+    <!-- Background Canvas Interactive Particle Network -->
+    <canvas id="bg-canvas" class="fixed top-0 left-0 w-full h-full pointer-events-none z-0"></canvas>
+
+    <!-- Navigation Header -->
+    <header class="fixed top-0 left-0 w-full z-50 glass-panel border-b border-white/5 px-6 py-4 transition-all duration-300">
+        <div class="max-w-7xl mx-auto flex justify-between items-center">
+            <!-- Brand Logo -->
+            <a href="#hero" class="flex items-center gap-2 group">
+                <div class="w-10 h-10 rounded-lg bg-gradient-to-br from-cyber-blue to-cyber-purple flex items-center justify-center text-black font-orbitron font-extrabold text-xl group-hover:rotate-12 transition-transform">
+                    N
+                </div>
+                <span class="font-orbitron font-bold text-lg tracking-wider text-white group-hover:text-cyber-blue transition-colors">
+                    NEXUS<span class="text-cyber-blue">.DEV</span>
+                </span>
+            </a>
+
+            <!-- Desktop Menu -->
+            <nav class="hidden md:flex items-center space-x-8 font-medium text-sm text-gray-300">
+                <a href="#about" class="hover:text-cyber-blue transition-colors hover:glow-text-cyan">Tentang</a>
+                <a href="#skills" class="hover:text-cyber-blue transition-colors hover:glow-text-cyan">Keahlian</a>
+                <a href="#projects" class="hover:text-cyber-blue transition-colors hover:glow-text-cyan">Proyek</a>
+                <a href="#experience" class="hover:text-cyber-blue transition-colors hover:glow-text-cyan">Pengalaman</a>
+                <a href="#contact" class="hover:text-cyber-blue transition-colors hover:glow-text-cyan">Kontak</a>
+            </nav>
+
+            <!-- Action Buttons -->
+            <div class="flex items-center space-x-4">
+                <button id="toggle-terminal" class="px-3 py-1.5 rounded-md bg-white/5 hover:bg-cyber-blue/20 border border-cyber-blue/30 text-cyber-blue font-mono text-xs flex items-center gap-2 transition-all">
+                    <i class="fas fa-terminal"></i>
+                    <span class="hidden sm:inline">Terminal Mode</span>
+                </button>
+                <a href="#contact" class="px-4 py-2 rounded-lg bg-gradient-to-r from-cyber-blue to-cyber-purple text-black font-bold text-xs uppercase tracking-wider hover:opacity-90 transition-opacity shadow-lg shadow-cyber-blue/20">
+                    Hire Me
+                </a>
+                <!-- Mobile Toggle -->
+                <button id="menu-btn" class="md:hidden text-gray-300 text-xl focus:outline-none">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Mobile Menu Dropdown -->
+        <div id="mobile-menu" class="hidden md:hidden mt-4 pt-4 border-t border-white/10 flex flex-col space-y-3 font-medium text-sm">
+            <a href="#about" class="hover:text-cyber-blue transition-colors">Tentang</a>
+            <a href="#skills" class="hover:text-cyber-blue transition-colors">Keahlian</a>
+            <a href="#projects" class="hover:text-cyber-blue transition-colors">Proyek</a>
+            <a href="#experience" class="hover:text-cyber-blue transition-colors">Pengalaman</a>
+            <a href="#contact" class="hover:text-cyber-blue transition-colors">Kontak</a>
+        </div>
+    </header>
+
+    <!-- Terminal Overlay (Interactive Feature) -->
+    <div id="terminal-modal" class="fixed inset-0 bg-black/80 backdrop-blur-md z-50 hidden flex items-center justify-center p-4">
+        <div class="w-full max-w-3xl bg-cyber-dark border border-cyber-blue/40 rounded-xl shadow-2xl overflow-hidden font-mono text-sm flex flex-col h-[500px]">
+            <!-- Terminal Header -->
+            <div class="bg-gray-900 px-4 py-3 border-b border-white/10 flex items-center justify-between">
+                <div class="flex items-center space-x-2">
+                    <div class="w-3 h-3 rounded-full bg-red-500 cursor-pointer" id="close-terminal"></div>
+                    <div class="w-3 h-3 rounded-full bg-yellow-500"></div>
+                    <div class="w-3 h-3 rounded-full bg-green-500"></div>
+                    <span class="ml-2 text-xs text-gray-400">interactive-shell -- bash</span>
+                </div>
+                <span class="text-xs text-gray-500">Ketik <span class="text-cyber-blue">'help'</span> untuk perintah</span>
+            </div>
+            <!-- Terminal Body -->
+            <div id="terminal-body" class="p-4 flex-1 overflow-y-auto space-y-2 text-gray-300">
+                <p class="text-cyber-blue">Selamat datang di Nexus Interactive Terminal v2.4.0</p>
+                <p class="text-gray-400">Silakan ketik <span class="text-yellow-400">'help'</span> untuk melihat daftar perintah yang tersedia.</p>
+            </div>
+            <!-- Terminal Input -->
+            <div class="p-3 bg-gray-950 border-t border-white/10 flex items-center gap-2">
+                <span class="text-cyber-blue font-bold">visitor@nexus:~$</span>
+                <input type="text" id="terminal-input" class="bg-transparent flex-1 focus:outline-none text-white font-mono text-sm" placeholder="Ketik perintah di sini..." focus>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content Container -->
+    <main class="relative z-10 pt-24">
+
+        <!-- Hero Section -->
+        <section id="hero" class="min-h-[90vh] flex items-center justify-center px-6 py-12">
+            <div class="max-w-5xl mx-auto text-center space-y-8">
+                <!-- Status Badge -->
+                <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full glass-panel border border-cyber-blue/30 text-xs font-mono text-cyber-blue">
+                    <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
+                    <span>Available for New Projects & Freelance</span>
+                </div>
+
+                <!-- Main Title -->
+                <h1 class="text-4xl sm:text-6xl md:text-7xl font-orbitron font-extrabold tracking-tight text-white leading-tight">
+                    Membangun Pengalaman Digital <br class="hidden sm:inline">
+                    <span class="animated-gradient-text">Masa Depan Hari Ini.</span>
+                </h1>
+
+                <!-- Subtitle -->
+                <p class="max-w-2xl mx-auto text-gray-400 text-base sm:text-lg leading-relaxed">
+                    Saya seorang <span class="text-white font-semibold">Full-Stack Developer & UI/UX Architect</span> yang berfokus menciptakan aplikasi web berkinerja tinggi, visual memukau, dan pengalaman pengguna yang luar biasa.
+                </p>
+
+                <!-- CTA Buttons -->
+                <div class="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4">
+                    <a href="#projects" class="w-full sm:w-auto px-8 py-4 rounded-xl bg-gradient-to-r from-cyber-blue to-cyber-purple text-black font-orbitron font-bold text-sm tracking-wider hover:scale-105 transition-transform flex items-center justify-center gap-2 shadow-lg shadow-cyber-blue/25">
+                        <i class="fas fa-rocket"></i> Lihat Portofolio
+                    </a>
+                    <a href="#contact" class="w-full sm:w-auto px-8 py-4 rounded-xl glass-panel text-white hover:text-cyber-blue border border-white/10 hover:border-cyber-blue/50 font-orbitron font-semibold text-sm tracking-wider transition-all flex items-center justify-center gap-2">
+                        <i class="fas fa-paper-plane"></i> Hubungi Saya
+                    </a>
+                </div>
+
+                <!-- Stats Bar -->
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-4 pt-12 max-w-4xl mx-auto">
+                    <div class="glass-panel p-4 rounded-xl border-l-4 border-l-cyber-blue">
+                        <div class="text-3xl font-orbitron font-bold text-white">5+</div>
+                        <div class="text-xs text-gray-400 uppercase tracking-wider mt-1">Tahun Pengalaman</div>
+                    </div>
+                    <div class="glass-panel p-4 rounded-xl border-l-4 border-l-cyber-purple">
+                        <div class="text-3xl font-orbitron font-bold text-white">40+</div>
+                        <div class="text-xs text-gray-400 uppercase tracking-wider mt-1">Proyek Selesai</div>
+                    </div>
+                    <div class="glass-panel p-4 rounded-xl border-l-4 border-l-cyber-pink">
+                        <div class="text-3xl font-orbitron font-bold text-white">99%</div>
+                        <div class="text-xs text-gray-400 uppercase tracking-wider mt-1">Kepuasan Klien</div>
+                    </div>
+                    <div class="glass-panel p-4 rounded-xl border-l-4 border-l-emerald-400">
+                        <div class="text-3xl font-orbitron font-bold text-white">24/7</div>
+                        <div class="text-xs text-gray-400 uppercase tracking-wider mt-1">Dukungan Kode</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- About Section -->
+        <section id="about" class="py-20 px-6 max-w-6xl mx-auto">
+            <div class="flex items-center gap-4 mb-12">
+                <span class="font-mono text-cyber-blue text-lg">01.</span>
+                <h2 class="text-3xl sm:text-4xl font-orbitron font-bold text-white">Tentang Saya</h2>
+                <div class="h-px bg-white/10 flex-1 ml-4"></div>
+            </div>
+
+            <div class="grid md:grid-cols-12 gap-8 items-center">
+                <!-- Profile Card Avatar -->
+                <div class="md:col-span-5 flex justify-center">
+                    <div class="relative group">
+                        <div class="absolute -inset-1 bg-gradient-to-r from-cyber-blue to-cyber-purple rounded-2xl blur opacity-75 group-hover:opacity-100 transition duration-1000 group-hover:duration-200 animate-pulse"></div>
+                        <div class="relative w-64 h-80 sm:w-72 sm:h-96 rounded-2xl bg-gray-900 border border-white/10 overflow-hidden flex flex-col justify-end p-6">
+                            <!-- Placeholder Graphic Avatar -->
+                            <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent z-10"></div>
+                            <img src="foto.png" alt="Profile" class="absolute inset-0 w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-500">
+                            
+                            <div class="relative z-20">
+                                <h3 class="text-xl font-orbitron font-bold text-white">M Irwansyah</h3>
+                                <p class="text-xs font-mono text-cyber-blue mt-1">Siswa SMK Ma'arif nu tirto</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Text Content -->
+                <div class="md:col-span-7 space-y-6 text-gray-300">
+                    <p class="leading-relaxed">
+                        Saya merupakan lulusan SMK Ma'arif NU Tirto jurusan Teknik Komputer dan Jaringan (TKJ). Saya memiliki kemampuan dasar dalam instalasi jaringan, pembuatan kabel LAN, dan fiber optik. Saya adalah pribadi yang disiplin, bertanggung jawab, mau belajar, dan mampu bekerja sama dalam tim. Saya siap mengembangkan kemampuan serta memperoleh pengalaman baru di dunia kerja..
+                    </p>
+                    <p class="leading-relaxed">
+                        Spesialisasi saya meliputi ekosistem <span class="text-cyber-blue">JavaScript / TypeScript</span>, kerangka kerja reaktif seperti React & Vue, serta backend microservices yang handal. Saya menyukai tantangan dalam menerjemahkan ide-ide kompleks menjadi aplikasi fungsional yang mulus.
+                    </p>
+                    
+                    <!-- Highlights Grid -->
+                    <div class="grid grid-cols-2 gap-4 pt-4 font-mono text-sm">
+                        <div class="flex items-center gap-2">
+                            <i class="fas fa-chevron-right text-cyber-blue text-xs"></i>
+                            <span>Frontend Architecture</span>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <i class="fas fa-chevron-right text-cyber-blue text-xs"></i>
+                            <span>UI/UX Animation</span>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <i class="fas fa-chevron-right text-cyber-blue text-xs"></i>
+                            <span>RESTful & GraphQL API</span>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <i class="fas fa-chevron-right text-cyber-blue text-xs"></i>
+                            <span>Database Optimization</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Skills Section -->
+        <section id="skills" class="py-20 px-6 max-w-6xl mx-auto">
+            <div class="flex items-center gap-4 mb-12">
+                <span class="font-mono text-cyber-blue text-lg">02.</span>
+                <h2 class="text-3xl sm:text-4xl font-orbitron font-bold text-white">Keahlian saya</h2>
+                <div class="h-px bg-white/10 flex-1 ml-4"></div>
+            </div>
+
+            <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Frontend Tech -->
+                <div class="glass-panel p-6 rounded-2xl glass-panel-hover transition-all">
+                    <div class="w-12 h-12 rounded-xl bg-cyber-blue/10 border border-cyber-blue/30 flex items-center justify-center text-cyber-blue text-2xl mb-4">
+                        <i class="fas fa-code"></i>
+                    </div>
+                    <h3 class="text-lg font-orbitron font-bold text-white mb-4">jaringan Komputer</h3>
+                    <div class="space-y-3 font-mono text-xs">
+                        <div>
+                            <div class="flex justify-between mb-1">
+                                <span class="text-gray-300">Instalasi kabel Lan</span>
+                                <span class="text-cyber-blue">95%</span>
+                            </div>
+                            <div class="w-full h-1.5 bg-gray-800 rounded-full overflow-hidden">
+                                <div class="h-full bg-cyber-blue rounded-full" style="width: 95%"></div>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="flex justify-between mb-1">
+                                <span class="text-gray-300">Konfigurasi IP Address</span>
+                                <span class="text-cyber-blue">90%</span>
+                            </div>
+                            <div class="w-full h-1.5 bg-gray-800 rounded-full overflow-hidden">
+                                <div class="h-full bg-cyber-blue rounded-full" style="width: 90%"></div>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="flex justify-between mb-1">
+                                <span class="text-gray-300">Konfigurasi DHCP</span>
+                                <span class="text-cyber-blue">92%</span>
+                            </div>
+                            <div class="w-full h-1.5 bg-gray-800 rounded-full overflow-hidden">
+                                <div class="h-full bg-cyber-blue rounded-full" style="width: 92%"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Backend Tech -->
+                <div class="glass-panel p-6 rounded-2xl glass-panel-hover transition-all">
+                    <div class="w-12 h-12 rounded-xl bg-cybe
