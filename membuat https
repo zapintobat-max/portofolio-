@@ -1,1 +1,79 @@
-
+Berikut urutan lengkap perintah Nomor 7 – Aktivasi Layanan Web agar Support HTTPS (Self-Signed) menggunakan Debian melalui PuTTY dan aaPanel.
+Ikuti dari atas sampai bawah.
+A. Persiapan Debian melalui PuTTY
+1. Buka PuTTY
+Masukkan IP Address Debian Server.
+Klik Open.
+Login menggunakan username dan password.
+2. Masuk sebagai root
+su -
+Masukkan password root.
+3. Perbarui daftar paket
+apt update
+4. Instal OpenSSL
+apt install openssl -y
+5. Periksa OpenSSL
+openssl version
+Jika muncul versi OpenSSL, berarti berhasil.
+B. Membuat Sertifikat SSL
+6. Tentukan nama domain
+DOMAIN="profil-nama_siswa.id"
+Ganti dengan domain milikmu.
+7. Buat sertifikat SSL
+openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout /etc/ssl/private/server.key -out /etc/ssl/certs/server.crt -subj "/CN=$DOMAIN" -addext "subjectAltName=DNS:$DOMAIN,DNS:www.$DOMAIN"
+Tunggu sampai selesai.
+8. Atur keamanan Private Key
+chmod 600 /etc/ssl/private/server.key
+9. Periksa file sertifikat
+ls -l /etc/ssl/private/server.key /etc/ssl/certs/server.crt
+Jika kedua file muncul, berarti berhasil dibuat.
+C. Mengambil Isi Sertifikat
+10. Tampilkan Certificate
+cat /etc/ssl/certs/server.crt
+Salin seluruh teks, mulai dari:
+-----BEGIN CERTIFICATE-----
+Sampai:
+-----END CERTIFICATE-----
+11. Tampilkan Private Key
+cat /etc/ssl/private/server.key
+Salin seluruh teks, mulai dari:
+-----BEGIN PRIVATE KEY-----
+Sampai bagian akhirnya.
+Penting: Jangan membagikan Private Key kepada orang lain.
+D. Memasang SSL di aaPanel
+12. Login aaPanel
+Buka browser.
+Masukkan alamat aaPanel.
+Login menggunakan akun administrator.
+13. Masuk ke pengaturan website
+Pilih Website.
+Pilih domain milikmu.
+Klik Settings.
+Pilih SSL.
+Pilih Other Certificate.
+14. Masukkan sertifikat
+Kolom Certificate: isi dari server.crt.
+Kolom Private Key: isi dari server.key.
+Klik Save.
+Pastikan SSL berhasil diaktifkan.
+E. Pengujian HTTPS
+15. Buka website
+Masukkan alamat berikut di browser:
+https://profil-nama_siswa.id
+Ganti dengan domain milikmu.
+Jika muncul peringatan sertifikat, itu normal karena menggunakan Self-Signed Certificate.
+Pastikan website dapat diakses melalui HTTPS.
+F. Dokumentasi Praktik
+Ambil screenshot:
+Instalasi OpenSSL.
+Versi OpenSSL.
+Pembuatan sertifikat SSL.
+File server.crt dan server.key.
+Pengaturan SSL di aaPanel.
+Website berhasil dibuka menggunakan HTTPS.
+Catatan
+Pastikan Debian terhubung ke internet.
+Pastikan domain sudah mengarah ke IP server.
+Pastikan port 443 terbuka.
+Jangan mengubah konfigurasi lain jika belum diperlukan.
+Saran: Kerjakan langkah 1–5 dahulu. Setelah OpenSSL berhasil terpasang, lanjutkan ke langkah berikutnya. Jika ada pesan error, kirim screenshot-nya agar bisa kita perbaiki. 👍
