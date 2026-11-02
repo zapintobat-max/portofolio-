@@ -1,0 +1,41 @@
+A. Membuat Firewall untuk Mengamankan Brute-Force Login
+1. Buka Winbox
+Hubungkan laptop ke router MikroTik.
+Buka aplikasi Winbox.
+Login menggunakan akun administrator.
+2. Masuk ke menu IP → Firewall → Filter Rules.
+3. Buat aturan untuk membatasi percobaan login.
+Kamu bisa menggunakan Terminal Winbox dan memasukkan perintah berikut secara berurutan:
+/ip firewall filter
+add chain=input protocol=tcp dst-port=22,8291 connection-state=new src-address-list=login_blacklist action=drop comment="Block Brute Force"
+
+add chain=input protocol=tcp dst-port=22,8291 connection-state=new src-address-list=login_stage3 action=add-src-to-address-list address-list=login_blacklist address-list-timeout=1d
+
+add chain=input protocol=tcp dst-port=22,8291 connection-state=new src-address-list=login_stage2 action=add-src-to-address-list address-list=login_stage3 address-list-timeout=1m
+
+add chain=input protocol=tcp dst-port=22,8291 connection-state=new src-address-list=login_stage1 action=add-src-to-address-list address-list=login_stage2 address-list-timeout=1m
+
+add chain=input protocol=tcp dst-port=22,8291 connection-state=new action=add-src-to-address-list address-list=login_stage1 address-list-timeout=1m
+Fungsinya:
+Mendeteksi percobaan koneksi berulang.
+Memasukkan alamat IP yang mencurigakan ke daftar blacklist.
+Memblokir IP tersebut selama 1 hari.
+Catatan: aturan ini perlu disesuaikan dengan konfigurasi router dan sebaiknya diuji di jaringan praktik. Batasi akses Winbox dan SSH hanya dari jaringan administrator agar tidak mengunci akses sendiri.
+B. Membuat Firewall untuk Mencatat Logging Aktivitas Penting
+1. Masuk ke IP → Firewall → Filter Rules.
+2. Buka Terminal Winbox.
+Masukkan perintah:
+/ip firewall filter
+add chain=input connection-state=invalid action=log log-prefix="INVALID-PACKET " limit=5,10
+Perintah tersebut mencatat paket jaringan yang tidak valid.
+3. Untuk melihat hasil logging:
+Buka menu Log di Winbox.
+Perhatikan aktivitas dengan tulisan INVALID-PACKET.
+C. Dokumentasi Hasil Praktik
+Ambil screenshot:
+Tampilan Firewall Filter Rules.
+Tampilan Address Lists.
+Tampilan Log.
+Screenshot tersebut bisa dimasukkan ke laporan praktik.
+Sebelum lanjut, aku mau memastikan satu hal:
+Kamu mengerjakan praktik ini menggunakan MikroTik melalui Winbox, kan?
