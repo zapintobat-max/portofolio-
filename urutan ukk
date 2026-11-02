@@ -1,0 +1,12 @@
+Konfigurasi MikroTik melalui Winbox.
+Konfigurasi switch manageable.
+Instalasi Debian.
+Instalasi aaPanel melalui PuTTY.
+Membuat website di aaPanel.
+Kembali ke PuTTY untuk membuat sertifikat SSL.
+Mengatur keamanan Private Key.
+Memeriksa file sertifikat.
+Mengambil isi server.crt dan server.key.
+Memasukkan sertifikat ke aaPanel.
+Mengaktifkan SSL.
+Menguji website menggunakan HTTPS
