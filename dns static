@@ -1,0 +1,27 @@
+Oke, berarti 10.10.10.116 adalah IP Address Debian Server, bukan MikroTik.
+Jadi konfigurasi DNS harus mengarah ke IP Debian tersebut.
+1. Contoh DNS Static di Winbox
+Masuk ke IP → DNS → Static → +.
+Isi seperti berikut:
+Kolom
+Isi
+Name
+irwansyah.test
+Type
+A
+Address
+10.10.10.116
+TTL
+1d
+Klik Apply → OK.
+2. Konfigurasi DNS HP
+HP harus terhubung ke WiFi sekolah dan menggunakan DNS IP MikroTik (gateway LAN).
+3. Pengujian
+Buka Chrome di HP:
+https://irwansyah.test
+Jika DNS dan konfigurasi web benar, website akan terbuka.
+Tapi aku perlu satu informasi lagi:
+Berapa IP Address MikroTik yang menjadi gateway Debian?
+Kamu bisa mengeceknya melalui PuTTY dengan perintah:
+ip route
+Cari tulisan default via. Angka setelahnya adalah gateway Debian.
