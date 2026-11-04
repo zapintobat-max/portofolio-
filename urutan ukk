@@ -1,12 +1,22 @@
+Iya, benar. Konfigurasi DNS Static di Winbox dilakukan setelah website dibuat di aaPanel agar nama domain mengarah ke IP Debian.
+Urutan yang benar:
 Konfigurasi MikroTik melalui Winbox.
 Konfigurasi switch manageable.
 Instalasi Debian.
+Konfigurasi IP Static Debian.
 Instalasi aaPanel melalui PuTTY.
 Membuat website di aaPanel.
-Kembali ke PuTTY untuk membuat sertifikat SSL.
+Konfigurasi DNS Static di Winbox.
+Uji website menggunakan HTTP.
+Instalasi OpenSSL jika belum tersedia.
+Membuat sertifikat SSL Self-Signed melalui PuTTY.
 Mengatur keamanan Private Key.
 Memeriksa file sertifikat.
-Mengambil isi server.crt dan server.key.
-Memasukkan sertifikat ke aaPanel.
-Mengaktifkan SSL.
-Menguji website menggunakan HTTPS
+Memasang SSL di aaPanel.
+Menguji website menggunakan HTTPS melalui laptop dan HP.
+Contoh:
+IP Debian: 10.10.10.116
+Domain: irwansyah.test
+DNS Static: irwansyah.test → 10.10.10.116
+Jadi, setelah website dibuat, barulah kita mengarahkan domain melalui DNS Static MikroTik.
+Catatan: Pastikan IP gateway MikroTik dan jaringan sekolah sudah diketahui sebelum mengatur DNS HP.
