@@ -1,0 +1,24 @@
+Untuk memeriksa apakah OpenSSL sudah terpasang di Debian, lakukan melalui PuTTY.
+1. Buka PuTTY
+Masukkan IP Address Debian.
+Login menggunakan username dan password.
+2. Masuk sebagai root
+su -
+3. Periksa OpenSSL
+Ketik perintah:
+openssl version
+4. Lihat hasilnya
+Jika muncul seperti ini:
+OpenSSL 3.0.x
+Artinya OpenSSL sudah terpasang dan bisa digunakan.
+Jika muncul:
+-bash: openssl: command not found
+Artinya OpenSSL belum terpasang.
+5. Jika belum terpasang
+Jalankan:
+apt update
+Lalu:
+apt install openssl -y
+Setelah selesai, periksa kembali:
+openssl version
+Kalau sudah muncul versi OpenSSL, berarti berhasil. 👍
